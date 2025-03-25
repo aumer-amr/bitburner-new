@@ -4,7 +4,7 @@
         "typescriptreact"
     ],
     "eslint.workingDirectories": [
-        "./src"
+        "./servers"
     ],
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
@@ -13,7 +13,7 @@
     "javascript.preferences.importModuleSpecifier": "non-relative",
     "typescript.preferences.importModuleSpecifier": "non-relative",
     // Bitburner Extension Settings
-    "bitburner.scriptRoot": "./dist",
+    "bitburner.scriptRoot": "./build",
     // Autosave Settings
     "files.autoSave": "off",
     // Autosnippet settings
