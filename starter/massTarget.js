@@ -30,7 +30,8 @@ function findValidTarget(servers, serversTargeted, server) {
 /** @param {NS} ns **/
 export async function main(ns) {
 	const servers = list_servers(ns)
-		.filter(s => ns.hasRootAccess(s));
+		.filter(s => ns.hasRootAccess(s))
+		.filter(s => !s.startsWith('amr'));
 
 	const serversTargeted = [];
 
@@ -45,10 +46,10 @@ export async function main(ns) {
 		const target = findValidTarget(servers, serversTargeted, server);
 		serversTargeted.push(target);
 
-		ns.tprint(`Deploying hackServer.js on ${server} targeting ${target}`);
+		ns.tprint(`Deploying fillServer.js on ${server} targeting ${target}`);
 
-		const pid = ns.exec("hackServer.js", server, 1, target);
-		await ns.sleep(1500);
+		const pid = ns.exec("fillServer.js", server, 1, target);
+		// await ns.sleep(500);
 		if (pid == 0) {
 			ns.tprint(`Deploy failed for ${server}`);
 		}
