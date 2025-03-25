@@ -1,3 +1,32 @@
 {
-	"bitburner.authToken": "H1tMHvKYmPxbOHUPwOBaVKXwhTS++s0VHPGpsPnri5ejEfWn4dteGxsGejP52Jnr"
+    "eslint.validate": [
+        "typescript",
+        "typescriptreact"
+    ],
+    "eslint.workingDirectories": [
+        "./src"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    // Use Non-relative imports so the game can find files in its fake directory structure
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    // Bitburner Extension Settings
+    "bitburner.scriptRoot": "./dist",
+    // Autosave Settings
+    "files.autoSave": "off",
+    // Autosnippet settings
+    "autoSnippet.snippets": [
+        {
+            "pattern": "**/*.ts",
+            "snippet": "ns-template"
+        },
+    ],
+    "bitburner.showFileWatcherEnabledNotification": true,
+    "bitburner.showPushSuccessNotification": true,
+    "bitburner.authToken": "H1tMHvKYmPxbOHUPwOBaVKXwhTS++s0VHPGpsPnri5ejEfWn4dteGxsGejP52Jnr",
+    "typescript.format.semicolons": "insert",
+    "typescript.preferences.quoteStyle": "single",
+    "typescript.suggest.completeFunctionCalls": true,
 }

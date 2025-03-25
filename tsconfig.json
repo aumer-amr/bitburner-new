@@ -1,24 +1,35 @@
 {
-  "include": ["NetscriptDefinitions.d.ts", "src/**/*"],
-  "exclude": ["src/lib/react.ts"],
+  "include": ["global.d.ts", "NetscriptDefinitions.d.ts", "servers/**/*", "lib"],
+  "exclude": ["lib/react.ts"],
   "compilerOptions": {
-    "module": "esnext",
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "NodeNext",
     "target": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "esModuleInterop": true,
     "inlineSourceMap": true,
     "inlineSources": true,
     "strict": true,
-    "rootDir": "src/",
-    "outDir": "dist/",
-    "baseUrl": "src/",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "rootDir": "./servers",
+    "outDir": "./build",
+    "baseUrl": "./",
     "allowJs": true,
     "jsx": "react",
     "paths": {
-      "/*": ["*"],
-      "@ns": ["../NetscriptDefinitions.d.ts"],
+      "@/*": [
+        "./*"
+      ],
+      "NetscriptDefinitions": ["NetscriptDefinitions.d.ts"],
       "@react": ["lib/react.ts"]
     }
   }
