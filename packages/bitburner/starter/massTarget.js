@@ -48,7 +48,10 @@ export async function main(ns) {
 
 		ns.tprint(`Deploying fillServer.js on ${server} targeting ${target}`);
 
-		const pid = ns.exec("fillServer.js", server, 1, target);
+		ns.scp("starter/fillServer.js", server);
+		ns.scp("starter/hackServer.js", server);
+
+		const pid = ns.exec("starter/fillServer.js", server, 1, target);
 		// await ns.sleep(500);
 		if (pid == 0) {
 			ns.tprint(`Deploy failed for ${server}`);

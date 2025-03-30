@@ -3,9 +3,7 @@
 	  "scope": "typescript",
 	  "prefix": "template",
 	  "body": [
-		"import { NS } from '@ns'",
-		"",
-		"export async function main(ns : NS) : Promise<void> {",
+		"export async function main(ns: NS) : Promise<void> {",
 		"\t//",
 		"}"
 	  ]

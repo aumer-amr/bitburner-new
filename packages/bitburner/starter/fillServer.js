@@ -22,7 +22,7 @@ export async function main(ns) {
 		.filter(s => ns.hasRootAccess(s))
 		.filter(s => !s.startsWith('amr'));
 
-	const requiredRam = ns.getScriptRam("hackServer.js");
+	const requiredRam = ns.getScriptRam("starter/hackServer.js");
 
 	let currentServer = ns.getServer();
 
@@ -40,10 +40,10 @@ export async function main(ns) {
 
 		ns.tprint(`Deploying hackServer.js on ${currentServer.hostname} targeting ${target}`);
 
-		const pid = ns.exec("hackServer.js", currentServer.hostname, 1, target);
+		const pid = ns.exec("starter/hackServer.js", currentServer.hostname, 1, target);
 		// await ns.sleep(500);
 		if (pid == 0) {
-			ns.tprint(`Deploy failed for ${server}`);
+			ns.tprint(`Deploy failed for ${currentServer.hostname}`);
 		}
 
 		currentServer = ns.getServer();

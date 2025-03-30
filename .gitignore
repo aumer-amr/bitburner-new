@@ -1,3 +1,5 @@
 node_modules/
-dist/
+build/
 NetscriptDefinitions.d.ts
+.dev/grafana/data
+.dev/prometheus/data

@@ -1,5 +1,5 @@
 {
-  "include": ["global.d.ts", "NetscriptDefinitions.d.ts", "servers/**/*", "lib"],
+  "include": ["global.d.ts", "NetscriptDefinitions.d.ts", "servers/**/*", "tests/**/*"],
   "exclude": ["lib/react.ts"],
   "compilerOptions": {
     "lib": [
@@ -19,15 +19,16 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "isolatedModules": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "rootDir": "./servers",
+    "rootDir": "./",
     "outDir": "./build",
     "baseUrl": "./",
     "allowJs": true,
     "jsx": "react",
     "paths": {
       "@/*": [
-        "./*"
+        "./servers/home/*"
       ],
       "NetscriptDefinitions": ["NetscriptDefinitions.d.ts"],
       "@react": ["lib/react.ts"]

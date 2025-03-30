@@ -72,8 +72,8 @@ export async function main(ns) {
 
                 // await ns.sleep(1000);
 
-                ns.scp('hackServer.js', server);
-                ns.scp('fillServer.js', server);
+                ns.scp('starter/hackServer.js', server);
+                ns.scp('starter/fillServer.js', server);
 
                 ns.tprint(`New target completed ${server}, run backdoor on this!`);
             }

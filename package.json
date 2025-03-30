@@ -1,25 +1,18 @@
 {
-  "name": "bitburner-typescript-template",
-  "version": "2.0.0",
-  "scripts": {
-    "start": "node ./config.mjs"
-  },
-  "author": "hydroflame, Hoekstraa, based on work by SlyCedix",
-  "devDependencies": {
-    "@types/react": "^18.2.18",
-    "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^5.35.1",
-    "@typescript-eslint/parser": "^5.35.1",
-    "bitburner-filesync": "^1.1.5",
-    "chokidar": "^3.5.3",
-    "concurrently": "^7.4.0",
-    "eslint": "^8.22.0",
-    "fast-glob": "^3.2.12",
-    "sync-directory": "^5.1.7",
-    "typescript": "^4.7.4"
-  },
+  "name": "bitburner-new",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/aumer-amr/bitburner-new.git",
+  "author": "Aumer <aumer@aumer.dev>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "dependencies": {
-    "esbuild": "^0.25.1",
-    "esbuild-bitburner-plugin": "^1.7.4"
+    "lerna": "^8.2.1"
+  },
+  "scripts": {
+    "start": "lerna run start --parallel"
   }
 }

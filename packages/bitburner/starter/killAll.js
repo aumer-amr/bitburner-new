@@ -24,7 +24,7 @@ export async function main(ns) {
     for(const server of servers) {
 		const ps = ns.ps(server);
 		for (const process of ps) {
-			if (process.filename == 'hackServer.js') {
+			if (process.filename == 'starter/hackServer.js') {
 				ns.kill(process.filename, server, ...process.args);
 			}
 		}

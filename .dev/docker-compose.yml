@@ -1,0 +1,29 @@
+version: '2'
+services:
+  prometheus:
+    image: 'quay.io/prometheus/prometheus:v2.48.1'
+    ports:
+      - '9090:9090'
+    volumes:
+      - './prometheus/data:/prometheus'
+      - './prometheus/config_out:/etc/prometheus/config_out'
+      - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+  grafana:
+    image: 'docker.io/grafana/grafana:10.2.2'
+    ports:
+      - '9094:9094'
+      - '4000:3000'
+    volumes:
+      - './grafana/data:/var/lib/grafana'
+      - './grafana/provisioning/datasources:/etc/grafana/provisioning/datasources'
+      - './grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards'
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+      - GF_PATHS_DATA=/var/lib/grafana
+      - GF_PATHS_LGOS=/var/log/grafana
+      - GF_EXPLORE_ENABLED=true
+  loki:
+    image: 'docker.io/grafana/loki:2.8.7'
+    ports:
+      - '3100:3100'
+      - '9095:9095'
