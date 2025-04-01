@@ -16,8 +16,16 @@ export class NSTransport implements Transport {
 	constructor(private options: NSTransportOptions) { }
 
 	log(level: LogLevel, attributes: TransportAttributes, message: string) {
-		const ns = this.options.ns || overseer.ns;
-		ns.tprintRaw(<LogEntry level={level} attributes={attributes} message={message} />);
+		try {
+			const ns = this.options.ns || overseer.ns;
+			ns.tprintRaw(<LogEntry level={level} attributes={attributes} message={message} />);
+		} catch (e) {
+			if((e as Error).name == "ScriptDeath") {
+				// Ignore script death errors
+			} else {
+				throw e;
+			}
+		}
 	}
 }
 
