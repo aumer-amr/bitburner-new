@@ -85,6 +85,14 @@ app.register(async function (app) {
 		res.status(204).send();
 	});
 
+	app.post("/pubsub/start", (req, res) => {
+		subscribeClient.unsubscribe("*", (message: string, channel: string) => {
+			console.log(`Unsubscribed from channel ${channel}`);
+		});
+
+		res.status(204).send();
+	});
+
 	app.post("/pubsub/publish", (req, res) => {
 		const body = req.body;
 		const { event, data } = body as any;
@@ -106,21 +114,31 @@ app.register(async function (app) {
 		});
 	});
 
-	app.get("/pubsub/unsubscribe/*", (req, res) => {
+	app.post("/pubsub/unsubscribe/*", async (req, res) => {
 		const channel = req.url.split("/").pop() as string;
 		if (!channel) {
 			res.status(400).send("Invalid channel name");
 			return;
 		}
 
-		subscribeClient.unsubscribe(channel, (message: string, channel: string) => {
-			console.log(`Unsubscribed from channel ${channel}`);
-			res.status(204).send();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(res.status(204).send());
+			}, 2000);
+
+			subscribeClient.unsubscribe(channel, (message: string, channel: string) => {
+				console.log(`Unsubscribed from channel ${channel}`);
+				resolve(res.status(204).send());
+			});
 		});
 	});
 });
 
-app.listen({ port: parseInt(port as string) }, async () => {
+app.listen({ port: parseInt(port as string) }, async (err, address) => {
+	if (err) {
+		console.error(err);
+		process.exit(1)
+	}
 	await publishClient.connect();
 	await subscribeClient.connect();
 	console.log(`[server]: Server is running at http://localhost:${port}`);

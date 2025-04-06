@@ -5,6 +5,12 @@ export class EventBus {
 	readonly bridgeHost = "localhost:5000";
 	subscribers = new Map<string, WebSocket[]>();
 
+	async start() {
+		return await fetch(`http://${this.bridgeHost}/pubsub/start`, {
+			method: "POST"
+		});
+	}
+
 	async publish(event: string, data: any) {
 		return await fetch(`http://${this.bridgeHost}/pubsub/publish`, {
 			method: "POST",
@@ -41,7 +47,7 @@ export class EventBus {
 			});
 
 			await fetch(`http://${this.bridgeHost}/pubsub/unsubscribe/${channel}`, {
-				method: "GET",
+				method: "POST",
 			});
 		}
 		this.subscribers.clear();

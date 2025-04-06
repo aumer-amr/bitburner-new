@@ -3,6 +3,10 @@ import { migrate } from '@/database/migrate';
 import { instance as EventBus } from '@/eventbus/eventbus';
 import { EventListener } from '@/eventbus/listener.decorator';
 import { StopOverseerEvent } from '@/eventbus/events/stop.overseer.event';
+import OverseerDashboard from '@/components/overseer';
+import React from '@react';
+
+import GlobalStyle from "@/styles/global.css";
 
 export interface GlobalOverseer {
 	ns: NS;
@@ -20,31 +24,31 @@ export interface OverseerHostData {
 
 // RAM: 2.85 GB
 export async function main(ns: NS) {
-	const overseerInstance = Overseer.init()
-		.setup(ns);
-
-	const command = overseerInstance.parseCommands(ns);
-	if (command?.stop) {
-		ns.fileExists(`commands/stop.js`, 'home') && ns.run(`commands/stop.js`);
-		return;
-	}
+	const overseerInstance = Overseer.init(ns)
+		.setup()
+		.dashboard();
 
 	overseer.logger.info("Overseer initialized successfully");
 
-	while (!overseerInstance.isStopping()) {
-		await ns.sleep(1000);
-	}
+	await new Promise<void>((resolve) => {
+		setInterval(() => {
+			if (overseerInstance.isStopping()) {
+				resolve();
+				return;
+			}
+		}, 1000);
+	});
 }
 
 class Overseer {
-	static instance: Overseer | undefined = undefined;
+	static instance: Overseer;
 
 	private stopping = false;
 
 	@EventListener<StopOverseerEvent>(StopOverseerEvent.topic)
 	static stop() {
 		overseer.logger.info("Stopping overseer");
-		Overseer.init().setStopping(true);
+		Overseer.instance.setStopping(true);
 	}
 
 	isStopping() {
@@ -55,21 +59,33 @@ class Overseer {
 		this.stopping = value;
 	}
 
-	static init() {
-		if (!Overseer.instance) {
-			Overseer.instance = new Overseer();
-		}
+	static init(ns: NS) {
+		Overseer.instance = new Overseer(ns);
 		return Overseer.instance;
 	}
 
-	// RAM: 0.15 GB
-	setup(ns: NS) {
-		ns.disableLog("ALL");
+	constructor(private readonly ns: NS) {}
 
+	// RAM: 0 GB
+	dashboard() {
+		this.ns.disableLog("ALL");
+		this.ns.ui.openTail()
+		this.ns.ui.resizeTail(500, 940)
+		this.ns.ui.moveTail(1020, 25)
+		this.ns.clearLog()
+
+		this.ns.printRaw(<GlobalStyle />);
+		this.ns.printRaw(<OverseerDashboard />);
+
+		return this;
+	}
+
+	// RAM: 0.15 GB
+	setup() {
 		// Collect basic host information
-		const hostName = ns.getHostname();
-		const hostMaxRam = ns.getServerMaxRam(hostName);
-		const hostRamUsed = ns.getServerUsedRam(hostName);
+		const hostName = this.ns.getHostname();
+		const hostMaxRam = this.ns.getServerMaxRam(hostName);
+		const hostRamUsed = this.ns.getServerUsedRam(hostName);
 
 		const host = {
 			name: hostName,
@@ -79,45 +95,35 @@ class Overseer {
 			}
 		};
 
-		if (!globalThis.overseer) {
+		if (!globalThis.overseer || Object.entries(globalThis.overseer).length === 0) {
 			globalThis.overseer = {} as GlobalOverseer;
 		}
 
 		globalThis.overseer = {
 			host,
-			ns,
+			ns: this.ns,
 			logger: new LoggerFactory({
 				hostname: host.name,
-				scriptname: ns.getScriptName()
+				scriptname: this.ns.getScriptName()
 			})
 		};
 
 		migrate();
 
 		const eventBus = EventBus();
-		ns.atExit(async () => {
+		eventBus.start();
+
+		this.ns.atExit(async () => {
 			overseer.logger.info("Overseer shutting down");
-			await eventBus.close();
+			this.ns.ui.closeTail();
+
+			setTimeout(async () => {
+				globalThis.overseer = {} as GlobalOverseer;
+				await eventBus.close();
+			}, 100);
 		});
 
 		return this;
 	}
-
-	// RAM: 0 GB
-	parseCommands(ns: NS) {
-		const validCommands = ['stop', 'start', 'restart', 'status'];
-		const foundCommand = ns.args.find(arg => validCommands.includes(arg as string));
-
-		if (foundCommand) {
-			overseer.logger.info(`Running command: ${foundCommand}`);
-			return {
-				stop: foundCommand === 'stop',
-				start: foundCommand === 'start',
-				restart: foundCommand === 'restart',
-				status: foundCommand === 'status'
-			}
-		}
-
-		return null;
-	}
 }
+
